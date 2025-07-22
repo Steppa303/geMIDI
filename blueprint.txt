@@ -1,0 +1,120 @@
+# Blueprint: AI MIDI Pattern Generator
+
+## 1. Anwendungsübersicht
+
+**Name:** AI MIDI Pattern Generator (auch bekannt als "Copy of Gemidi Midi+new-sound")
+
+**Zweck:**
+Diese Webanwendung dient als fortschrittliches Werkzeug für Musiker und Produzenten zur Erstellung und Bearbeitung von MIDI-Patterns. Sie kombiniert traditionelle Sequenzer-Funktionalitäten mit der Leistungsfähigkeit der Gemini API von Google, um repetitive Aufgaben zu automatisieren, kreative Blockaden zu überwinden und neue musikalische Ideen zu generieren. Die Anwendung ermöglicht die Generierung von Drum-Beats und Synth-Melodien/-Harmonien, deren Erweiterung und Anpassung sowie die Integration mit externen MIDI-Geräten oder die Nutzung einer internen Audio-Vorschau.
+
+**Kernfunktionalität (Zusammenfassung):**
+*   **MIDI-Integration:** Anschluss an MIDI-Eingabe- und Ausgabegeräte über die Web MIDI API.
+*   **Transportsteuerung:** Wiedergabe, Pause, BPM-Einstellung (Tempo), Loop-Funktion.
+*   **Synchronisation:** Unterstützung für externen MIDI-Clock sowie interner Sequenzer.
+*   **Modi:**
+    *   **Audio-Vorschau-Modus:** Interne Klangerzeugung mit Tone.js für sofortiges Feedback ohne externe Hardware.
+    *   **MIDI-Ausgabe-Modus:** Sendet MIDI-Daten an ausgewählte externe Geräte.
+*   **Track-Management:** Erstellung und Verwaltung mehrerer Spuren (Drums, Synths).
+*   **AI-gestützte Pattern-Generierung:**
+    *   Generierung neuer MIDI-Patterns basierend auf Text-Prompts für einzelne Spuren.
+    *   "Master Prompt"-System zur gleichzeitigen Generierung von Patterns für alle Spuren basierend auf einer übergeordneten musikalischen Idee.
+*   **AI-gestützte Pattern-Erweiterung:** Intelligente Verlängerung bestehender Patterns unter Beibehaltung des musikalischen Kontexts.
+*   **AI-gestützte CC-Automation-Generierung (Synth):** Generierung von MIDI CC-Automationsdaten für bis zu drei unabhängige Lanes pro Spur basierend auf Text-Prompts.
+*   **Pattern-Verkettung (Progression):**
+    *   Jede Spur verfügt über einen "Progression"-Schalter. Wenn dieser aktiviert ist, werden alle Patterns im "Pattern Memory" dieser Spur nacheinander abgespielt, anstatt nur das ausgewählte Pattern zu loopen.
+    *   Eine "Generate Pattern Progression"-Funktion füllt das "Pattern Memory" aller Spuren mit musikalisch zusammenhängenden Abschnitten (z. B. Intro, Strophe, Refrain) und aktiviert automatisch den Progression-Modus für diese Spuren.
+*   **Pattern-Verlauf (Memory):** Speicherung mehrerer Pattern-Versionen pro Spur mit der Möglichkeit, manuell zwischen ihnen zu wechseln (wenn die Progression für die Spur deaktiviert ist).
+*   **Synth-Sound-Design:** Detaillierte Anpassung von Synthesizer-Parametern für verschiedene Syntheseformen (BasicSynth, MonoSynth, FMSynth, PolySynth) mit Live-Audio-Feedback im Vorschau-Modus.
+*   **Visualisierung:**
+    *   Kompakte Pattern-Ansicht in jeder Track-Karte, inklusive überlagerter Ansicht der drei CC-Automations-Lanes.
+    *   Vollbild-Visualisierung für detaillierte Ansicht und Bearbeitung.
+*   **Weitere Features:** Stummschalten von Spuren, Oktavverschiebung für Synth-Spuren, Hinzufügen neuer Synth-Spuren, Herunterladen von Patterns als MIDI, Session Import/Export.
+
+**Zielgruppe:**
+Musiker, Musikproduzenten, Hobbyisten und alle, die mit MIDI-Sequenzierung und generativer Musik experimentieren möchten.
+
+## 2. Detaillierte Features
+
+### 2.1. MIDI-Konnektivität und -Steuerung
+(Unverändert)
+
+### 2.2. Transport und Wiedergabe
+*   Der Wiedergabe-Modus wird jetzt pro Spur gesteuert. Spuren können entweder ein einzelnes Pattern loopen oder ihre gesamte Pattern-Historie nacheinander abspielen.
+*   Der globale Loop wird deaktiviert, wenn mindestens eine Spur im Progression-Modus (Pattern-Verkettung) ist.
+
+### 2.3. AI-gestützte Pattern-Generierung (Gemini API)
+(Unverändert)
+
+### 2.4. AI-gestützte Pattern-Erweiterung (Gemini API)
+(Unverändert)
+
+### 2.5. AI-gestützte CC-Automation-Generierung (Synth-Spuren)
+(Unverändert)
+
+### 2.6. Track-Management
+*   Jede Spur hat einen neuen Zustand `isProgressionChaining`, der über einen Schalter in der `TrackCard` gesteuert wird.
+
+### 2.7. Synth-Sound-Design (für Synth-Spuren)
+(Unverändert)
+
+### 2.8. Drum-Sound-Konfiguration (für Drum-Spuren)
+(Unverändert)
+
+### 2.9. Pattern-Visualisierung
+(Unverändert, aber mit dem Zusatz, dass CC-Automationen überlagert werden)
+
+### 2.10. Pattern-Verlauf und -Verkettung
+*   **Pattern Memory:** Fungiert weiterhin als Speicher für bis zu 10 Pattern-Versionen.
+*   **Pattern Chaining (Progression):** Ein neuer Schalter pro Spur ermöglicht es, die Wiedergabe von einem geloopten Pattern auf eine sequenzielle Wiedergabe aller Patterns im Speicher umzuschalten.
+*   **AI Pattern Progression Button:** Diese Funktion generiert keine komplexe `ProgressionPlan`-Struktur mehr. Stattdessen bevölkert sie direkt das "Pattern Memory" jeder Spur mit einer Reihe von thematisch passenden Patterns und aktiviert deren "Progression"-Schalter.
+
+### 2.11. Weitere Funktionen
+*   **MIDI-Download:** (Unverändert)
+*   **Session Import/Export:** Das `progressionPlan`-Objekt wurde aus dem Export entfernt. Stattdessen wird der `isProgressionChaining`-Zustand für jede Spur gespeichert und geladen.
+*   **Globale/Track-spezifische Fehleranzeige:** (Unverändert)
+
+
+## 3. Technische Architektur
+(Unverändert)
+
+### 3.4. Komponentenbasierte Struktur
+(Unverändert)
+
+## 4. Kernkomponenten und ihre Verantwortlichkeiten
+*   **`App.tsx`:** Verwaltet den Zustand aller Spuren, einschließlich ihres `isProgressionChaining`-Status. Die zentrale Wiedergabelogik (`processMidiStep` und die Scheduler) wurde überarbeitet, um den hybriden Wiedergabemodus (einige Spuren loopen, andere ketten Patterns aneinander) zu unterstützen.
+*   **`Header.tsx`:** Der globale "Progression Mode"-Button wurde entfernt. Behält den "Generate Pattern Progression"-Button.
+*   **`TrackCard.tsx`:** Enthält jetzt einen neuen UI-Schalter, um `isProgressionChaining` für die jeweilige Spur umzuschalten. Die Logik zur Visualisierung des Playheads berechnet die korrekte Position basierend auf dem Modus der Spur (Loop oder Kette).
+*   (Restliche Komponenten wie zuvor)
+
+## 5. Datenstrukturen (aus `types.ts` und `constants.ts`)
+*   **`Track`:** Das Kerninterface enthält jetzt ein Boolean `isProgressionChaining`. Die Typen `ProgressionPlan`, `ProgressionSection` und `ProgressionSectionDefinition` wurden entfernt.
+*   **`ExportedSessionState`**: `progressionPlan` wurde entfernt.
+*   (Restliche Strukturen wie zuvor)
+
+## 6. Wichtige Workflows und Logik
+
+### 6.1. Wiedergabe (`processMidiStep`)
+Die Wiedergabelogik wurde grundlegend überarbeitet. Sie iteriert durch alle Spuren und prüft deren `isProgressionChaining`-Status:
+*   **Falls `false`:** Die Logik verhält sich wie zuvor im normalen Loop-Modus. Das Pattern am `currentPatternIndex` wird basierend auf seiner eigenen Länge geloopt.
+*   **Falls `true`:**
+    1.  Die Gesamtlänge (in Steps) der gesamten Pattern-Historie der Spur wird berechnet.
+    2.  Der `absoluteStep` der Wiedergabe wird modulo dieser Gesamtlänge genommen, um die aktuelle Position in der Kette zu finden.
+    3.  Es wird ermittelt, welches Pattern in der Kette gerade aktiv ist und welcher lokale Step innerhalb dieses Patterns dem globalen Step entspricht.
+    4.  Die MIDI-Noten für diesen lokalen Step werden gesendet.
+
+### 6.2. Audio-Vorschau (Tone.js)
+(Unverändert, aber die Loop-Länge des Transports wird jetzt dynamisch basierend darauf gesetzt, ob eine Spur im Chaining-Modus ist).
+
+### 6.3. Gemini API Interaktion (`geminiService.ts`)
+(Unverändert)
+
+## 7. UI/UX Designphilosophie
+Die Steuerung der Song-Struktur wurde von einem globalen, modalen Ansatz zu einem flexibleren, pro-Spur-basierten System verlagert, was die Benutzerfreundlichkeit und Direktheit erhöht.
+
+## 8. Bekannte Probleme und Lösungen (Changelog)
+(Unverändert)
+
+## 9. Zukünftige Überlegungen / Mögliche Verbesserungen
+(Unverändert)
+
+Dieses Blueprint-Dokument wurde aktualisiert, um die Umstellung von einem globalen "Progression Plan" zu einem flexiblen, pro-Spur-basierten "Pattern Chaining"-System widerzuspiegeln.

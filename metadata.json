@@ -1,0 +1,6 @@
+{
+  "name": "geMIDI Edit-Mode",
+  "description": "A web application that uses the Gemini API to generate and expand MIDI patterns for drum and synth tracks, with WebMIDI integration for playback and control.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
